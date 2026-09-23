@@ -1,0 +1,886 @@
+import {
+  Venue,
+  Court,
+  CourtSlot,
+  BookingTicket,
+  AddOnItem,
+  PartnerAccount,
+  TransactionRecord,
+} from '../types';
+
+export const INITIAL_VENUES: Venue[] = [
+  {
+    id: 'venue_bt_01',
+    name: 'CLB Cầu Lông & Pickleball Bình Thạnh Sport',
+    address: '123 Chu Văn An, Phường 12, Quận Bình Thạnh, TP. HCM',
+    district: 'Bình Thạnh',
+    hotline: '028 3511 8899',
+    sports: ['badminton', 'pickleball'],
+    openTime: '06:00',
+    closeTime: '22:00',
+    baseHourlyRate: 150000,
+    imageUrl: 'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800',
+    isActive: true,
+    totalCourts: 6,
+    description: 'Cụm sân cầu lông và pickleball sôi động tại Bình Thạnh, thảm chuyên dụng chất lượng cao, căn tin giải khát và bãi đỗ ô tô rộng.',
+  },
+  {
+    id: 'venue_td_02',
+    name: 'Thảo Điền Pickleball Hub',
+    address: '45 Quốc Hương, Phường Thảo Điền, TP. Thủ Đức, TP. HCM',
+    district: 'Thủ Đức',
+    hotline: '0909 777 888',
+    sports: ['pickleball'],
+    openTime: '06:00',
+    closeTime: '22:00',
+    baseHourlyRate: 200000,
+    imageUrl: 'https://images.unsplash.com/photo-1599474924187-334a4ae5bd3c?w=800',
+    isActive: true,
+    totalCourts: 8,
+    description: 'Trung tâm Pickleball tiêu chuẩn quốc tế tại Thảo Điền với 8 sân ngoài trời có mái che, phòng tắm nóng lạnh và HLV chuyên nghiệp.',
+  },
+  {
+    id: 'venue_q7_03',
+    name: 'Sân Bóng Đá Mini Nam Sài Gòn',
+    address: '78 Nguyễn Hữu Thọ, Phường Tân Hưng, Quận 7, TP. HCM',
+    district: 'Quận 7',
+    hotline: '0918 333 777',
+    sports: ['football'],
+    openTime: '06:00',
+    closeTime: '23:00',
+    baseHourlyRate: 280000,
+    imageUrl: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=800',
+    isActive: true,
+    totalCourts: 4,
+    description: 'Cụm 4 sân bóng đá mini cỏ nhân tạo 5-7 người tiêu chuẩn thi đấu FIFA, hệ thống đèn chiếu sáng LED chống chói và dịch vụ cho thuê giày, bóng, áo bib.',
+  },
+  {
+    id: 'venue_01',
+    name: 'CLB Cầu Lông Tao Đàn - Quận 1',
+    address: 'Số 1 Huyền Trân Công Chúa, Phường Bến Thành, Quận 1, TP. HCM',
+    district: 'Quận 1',
+    hotline: '028 3822 4156',
+    sports: ['badminton', 'pickleball'],
+    openTime: '06:00',
+    closeTime: '22:00',
+    baseHourlyRate: 160000,
+    imageUrl: 'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800',
+    isActive: true,
+    totalCourts: 8,
+    description: 'Cụm sân thể thao tiêu chuẩn quốc tế ngay trung tâm Quận 1 với 4 sân cầu lông thảm Yonex và 4 sân pickleball chuyên nghiệp.',
+  },
+  {
+    id: 'venue_tb_05',
+    name: 'Khu Liên Hợp Thể Thao Tân Bình Arena',
+    address: '448 Hoàng Văn Thụ, Phường 4, Quận Tân Bình, TP. HCM',
+    district: 'Tân Bình',
+    hotline: '0903 888 999',
+    sports: ['badminton', 'football', 'pickleball'],
+    openTime: '06:00',
+    closeTime: '23:00',
+    baseHourlyRate: 180000,
+    imageUrl: 'https://images.unsplash.com/photo-1599474924187-334a4ae5bd3c?w=800',
+    isActive: true,
+    totalCourts: 10,
+    description: 'Khu liên hợp thể thao quy mô 10 sân bao gồm cụm sân bóng đá cỏ nhân tạo, sân cầu lông thảm Enlio và sân pickleball hiện đại.',
+  },
+];
+
+export const INITIAL_COURTS: Court[] = [
+  // Tao Đàn (venue_01): 4 badminton, 4 pickleball
+  {
+    id: 'court_01',
+    venueId: 'venue_01',
+    name: 'Sân Cầu Lông 01',
+    sport: 'badminton',
+    surfaceType: 'Thảm Yonex Tiêu Chuẩn',
+    facilityType: 'indoor',
+    regularPrice: 120000,
+    peakPrice: 180000,
+    isActive: true,
+  },
+  {
+    id: 'court_02',
+    venueId: 'venue_01',
+    name: 'Sân Cầu Lông 02',
+    sport: 'badminton',
+    surfaceType: 'Thảm Yonex Tiêu Chuẩn',
+    facilityType: 'indoor',
+    regularPrice: 120000,
+    peakPrice: 180000,
+    isActive: true,
+  },
+  {
+    id: 'court_03',
+    venueId: 'venue_01',
+    name: 'Sân Cầu Lông 03',
+    sport: 'badminton',
+    surfaceType: 'Thảm Yonex Tiêu Chuẩn',
+    facilityType: 'indoor',
+    regularPrice: 120000,
+    peakPrice: 180000,
+    isActive: true,
+  },
+  {
+    id: 'court_04',
+    venueId: 'venue_01',
+    name: 'Sân Cầu Lông 04',
+    sport: 'badminton',
+    surfaceType: 'Thảm Yonex Tiêu Chuẩn',
+    facilityType: 'indoor',
+    regularPrice: 120000,
+    peakPrice: 180000,
+    isActive: true,
+  },
+  {
+    id: 'court_05',
+    venueId: 'venue_01',
+    name: 'Sân Pickleball 05',
+    sport: 'pickleball',
+    surfaceType: 'Sơn Acrylic US Open',
+    facilityType: 'indoor',
+    regularPrice: 150000,
+    peakPrice: 220000,
+    isActive: true,
+  },
+  {
+    id: 'court_06',
+    venueId: 'venue_01',
+    name: 'Sân Pickleball 06',
+    sport: 'pickleball',
+    surfaceType: 'Sơn Acrylic US Open',
+    facilityType: 'indoor',
+    regularPrice: 150000,
+    peakPrice: 220000,
+    isActive: true,
+  },
+  {
+    id: 'court_07',
+    venueId: 'venue_01',
+    name: 'Sân Pickleball 07',
+    sport: 'pickleball',
+    surfaceType: 'Sơn Acrylic US Open',
+    facilityType: 'indoor',
+    regularPrice: 150000,
+    peakPrice: 220000,
+    isActive: true,
+  },
+  {
+    id: 'court_08',
+    venueId: 'venue_01',
+    name: 'Sân Pickleball 08',
+    sport: 'pickleball',
+    surfaceType: 'Sơn Acrylic US Open',
+    facilityType: 'outdoor',
+    regularPrice: 130000,
+    peakPrice: 200000,
+    isActive: true,
+  },
+  // Sân Bóng Đá Mini Nam Sài Gòn (venue_q7_03) - 4 sân bóng đá cỏ nhân tạo
+  {
+    id: 'court_q7_01',
+    venueId: 'venue_q7_03',
+    name: 'Sân Bóng Đá Mini 01 (Sân 5)',
+    sport: 'football',
+    courtNumber: 1,
+    surfaceType: 'Cỏ nhân tạo FIFA Star',
+    facilityType: 'outdoor',
+    regularPrice: 280000,
+    peakPrice: 380000,
+    isActive: true,
+  },
+  {
+    id: 'court_q7_02',
+    venueId: 'venue_q7_03',
+    name: 'Sân Bóng Đá Mini 02 (Sân 5)',
+    sport: 'football',
+    courtNumber: 2,
+    surfaceType: 'Cỏ nhân tạo FIFA Star',
+    facilityType: 'outdoor',
+    regularPrice: 280000,
+    peakPrice: 380000,
+    isActive: true,
+  },
+  {
+    id: 'court_q7_03',
+    venueId: 'venue_q7_03',
+    name: 'Sân Bóng Đá Mini 03 (Sân 5)',
+    sport: 'football',
+    courtNumber: 3,
+    surfaceType: 'Cỏ nhân tạo FIFA Star',
+    facilityType: 'outdoor',
+    regularPrice: 280000,
+    peakPrice: 380000,
+    isActive: true,
+  },
+  {
+    id: 'court_q7_04',
+    venueId: 'venue_q7_03',
+    name: 'Sân Bóng Đá 04 (Sân 7 Tiêu Chuẩn)',
+    sport: 'football',
+    courtNumber: 4,
+    surfaceType: 'Cỏ nhân tạo FIFA Star Pro',
+    facilityType: 'outdoor',
+    regularPrice: 350000,
+    peakPrice: 480000,
+    isActive: true,
+  },
+  // Khu Liên Hợp Thể Thao Tân Bình Arena (venue_tb_05) - Multi-sport: badminton, football, pickleball
+  {
+    id: 'court_tb_01',
+    venueId: 'venue_tb_05',
+    name: 'Sân Cầu Lông TB-1',
+    sport: 'badminton',
+    courtNumber: 1,
+    surfaceType: 'Thảm Enlio Thi Đấu',
+    facilityType: 'indoor',
+    regularPrice: 150000,
+    peakPrice: 200000,
+    isActive: true,
+  },
+  {
+    id: 'court_tb_02',
+    venueId: 'venue_tb_05',
+    name: 'Sân Cầu Lông TB-2',
+    sport: 'badminton',
+    courtNumber: 2,
+    surfaceType: 'Thảm Enlio Thi Đấu',
+    facilityType: 'indoor',
+    regularPrice: 150000,
+    peakPrice: 200000,
+    isActive: true,
+  },
+  {
+    id: 'court_tb_03',
+    venueId: 'venue_tb_05',
+    name: 'Sân Cầu Lông TB-3',
+    sport: 'badminton',
+    courtNumber: 3,
+    surfaceType: 'Thảm Enlio Thi Đấu',
+    facilityType: 'indoor',
+    regularPrice: 150000,
+    peakPrice: 200000,
+    isActive: true,
+  },
+  {
+    id: 'court_tb_04',
+    venueId: 'venue_tb_05',
+    name: 'Sân Cầu Lông TB-4',
+    sport: 'badminton',
+    courtNumber: 4,
+    surfaceType: 'Thảm Enlio Thi Đấu',
+    facilityType: 'indoor',
+    regularPrice: 150000,
+    peakPrice: 200000,
+    isActive: true,
+  },
+  {
+    id: 'court_tb_05',
+    venueId: 'venue_tb_05',
+    name: 'Sân Bóng Đá Cỏ Nhân Tạo TB-A (Sân 7)',
+    sport: 'football',
+    courtNumber: 5,
+    surfaceType: 'Cỏ nhân tạo FIFA Pro',
+    facilityType: 'outdoor',
+    regularPrice: 300000,
+    peakPrice: 420000,
+    isActive: true,
+  },
+  {
+    id: 'court_tb_06',
+    venueId: 'venue_tb_05',
+    name: 'Sân Bóng Đá Cỏ Nhân Tạo TB-B (Sân 5)',
+    sport: 'football',
+    courtNumber: 6,
+    surfaceType: 'Cỏ nhân tạo FIFA Pro',
+    facilityType: 'outdoor',
+    regularPrice: 250000,
+    peakPrice: 350000,
+    isActive: true,
+  },
+  {
+    id: 'court_tb_07',
+    venueId: 'venue_tb_05',
+    name: 'Sân Bóng Đá Cỏ Nhân Tạo TB-C (Sân 5)',
+    sport: 'football',
+    courtNumber: 7,
+    surfaceType: 'Cỏ nhân tạo FIFA Pro',
+    facilityType: 'outdoor',
+    regularPrice: 250000,
+    peakPrice: 350000,
+    isActive: true,
+  },
+  {
+    id: 'court_tb_08',
+    venueId: 'venue_tb_05',
+    name: 'Sân Pickleball TB-P1',
+    sport: 'pickleball',
+    courtNumber: 8,
+    surfaceType: 'Sơn Acrylic US Open',
+    facilityType: 'indoor',
+    regularPrice: 160000,
+    peakPrice: 220000,
+    isActive: true,
+  },
+  {
+    id: 'court_tb_09',
+    venueId: 'venue_tb_05',
+    name: 'Sân Pickleball TB-P2',
+    sport: 'pickleball',
+    courtNumber: 9,
+    surfaceType: 'Sơn Acrylic US Open',
+    facilityType: 'indoor',
+    regularPrice: 160000,
+    peakPrice: 220000,
+    isActive: true,
+  },
+  {
+    id: 'court_tb_10',
+    venueId: 'venue_tb_05',
+    name: 'Sân Pickleball TB-P3',
+    sport: 'pickleball',
+    courtNumber: 10,
+    surfaceType: 'Sơn Acrylic US Open',
+    facilityType: 'outdoor',
+    regularPrice: 140000,
+    peakPrice: 200000,
+    isActive: true,
+  },
+  // CLB Cầu Lông & Pickleball Bình Thạnh Sport (venue_bt_01)
+  {
+    id: 'court_bt_01',
+    venueId: 'venue_bt_01',
+    name: 'Sân Cầu Lông BT-1',
+    sport: 'badminton',
+    courtNumber: 1,
+    surfaceType: 'Thảm Yonex',
+    facilityType: 'indoor',
+    regularPrice: 150000,
+    peakPrice: 200000,
+    isActive: true,
+  },
+  {
+    id: 'court_bt_02',
+    venueId: 'venue_bt_01',
+    name: 'Sân Cầu Lông BT-2',
+    sport: 'badminton',
+    courtNumber: 2,
+    surfaceType: 'Thảm Yonex',
+    facilityType: 'indoor',
+    regularPrice: 150000,
+    peakPrice: 200000,
+    isActive: true,
+  },
+  {
+    id: 'court_bt_03',
+    venueId: 'venue_bt_01',
+    name: 'Sân Cầu Lông BT-3',
+    sport: 'badminton',
+    courtNumber: 3,
+    surfaceType: 'Thảm Yonex',
+    facilityType: 'indoor',
+    regularPrice: 150000,
+    peakPrice: 200000,
+    isActive: true,
+  },
+  {
+    id: 'court_bt_04',
+    venueId: 'venue_bt_01',
+    name: 'Sân Cầu Lông BT-4',
+    sport: 'badminton',
+    courtNumber: 4,
+    surfaceType: 'Thảm Yonex',
+    facilityType: 'indoor',
+    regularPrice: 150000,
+    peakPrice: 200000,
+    isActive: true,
+  },
+  {
+    id: 'court_bt_05',
+    venueId: 'venue_bt_01',
+    name: 'Sân Pickleball BT-5',
+    sport: 'pickleball',
+    courtNumber: 5,
+    surfaceType: 'Sơn Acrylic',
+    facilityType: 'indoor',
+    regularPrice: 170000,
+    peakPrice: 230000,
+    isActive: true,
+  },
+  {
+    id: 'court_bt_06',
+    venueId: 'venue_bt_01',
+    name: 'Sân Pickleball BT-6',
+    sport: 'pickleball',
+    courtNumber: 6,
+    surfaceType: 'Sơn Acrylic',
+    facilityType: 'outdoor',
+    regularPrice: 150000,
+    peakPrice: 210000,
+    isActive: true,
+  },
+  // Thảo Điền Pickleball Hub (venue_td_02)
+  {
+    id: 'court_td_01',
+    venueId: 'venue_td_02',
+    name: 'Sân Pickleball TD-01',
+    sport: 'pickleball',
+    courtNumber: 1,
+    surfaceType: 'Sơn Acrylic US Open',
+    facilityType: 'outdoor',
+    regularPrice: 200000,
+    peakPrice: 260000,
+    isActive: true,
+  },
+  {
+    id: 'court_td_02',
+    venueId: 'venue_td_02',
+    name: 'Sân Pickleball TD-02',
+    sport: 'pickleball',
+    courtNumber: 2,
+    surfaceType: 'Sơn Acrylic US Open',
+    facilityType: 'outdoor',
+    regularPrice: 200000,
+    peakPrice: 260000,
+    isActive: true,
+  },
+  {
+    id: 'court_td_03',
+    venueId: 'venue_td_02',
+    name: 'Sân Pickleball TD-03',
+    sport: 'pickleball',
+    courtNumber: 3,
+    surfaceType: 'Sơn Acrylic US Open',
+    facilityType: 'outdoor',
+    regularPrice: 200000,
+    peakPrice: 260000,
+    isActive: true,
+  },
+  {
+    id: 'court_td_04',
+    venueId: 'venue_td_02',
+    name: 'Sân Pickleball TD-04',
+    sport: 'pickleball',
+    courtNumber: 4,
+    surfaceType: 'Sơn Acrylic US Open',
+    facilityType: 'outdoor',
+    regularPrice: 200000,
+    peakPrice: 260000,
+    isActive: true,
+  },
+  {
+    id: 'court_td_05',
+    venueId: 'venue_td_02',
+    name: 'Sân Pickleball TD-05',
+    sport: 'pickleball',
+    courtNumber: 5,
+    surfaceType: 'Sơn Acrylic US Open',
+    facilityType: 'outdoor',
+    regularPrice: 200000,
+    peakPrice: 260000,
+    isActive: true,
+  },
+  {
+    id: 'court_td_06',
+    venueId: 'venue_td_02',
+    name: 'Sân Pickleball TD-06',
+    sport: 'pickleball',
+    courtNumber: 6,
+    surfaceType: 'Sơn Acrylic US Open',
+    facilityType: 'outdoor',
+    regularPrice: 200000,
+    peakPrice: 260000,
+    isActive: true,
+  },
+  {
+    id: 'court_td_07',
+    venueId: 'venue_td_02',
+    name: 'Sân Pickleball TD-07',
+    sport: 'pickleball',
+    courtNumber: 7,
+    surfaceType: 'Sơn Acrylic US Open',
+    facilityType: 'outdoor',
+    regularPrice: 200000,
+    peakPrice: 260000,
+    isActive: true,
+  },
+  {
+    id: 'court_td_08',
+    venueId: 'venue_td_02',
+    name: 'Sân Pickleball TD-08',
+    sport: 'pickleball',
+    courtNumber: 8,
+    surfaceType: 'Sơn Acrylic US Open',
+    facilityType: 'outdoor',
+    regularPrice: 200000,
+    peakPrice: 260000,
+    isActive: true,
+  },
+];
+
+export function getTodayDateString(offsetDays = 0): string {
+  const d = new Date();
+  if (offsetDays !== 0) {
+    d.setDate(d.getDate() + offsetDays);
+  }
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+export function getTodayISOString(offsetDays = 0, timeStr = '08:00:00Z'): string {
+  const dateStr = getTodayDateString(offsetDays);
+  return `${dateStr}T${timeStr}`;
+}
+
+// Generate 16 hours of slots (06:00 to 22:00) for Tao Đàn courts
+export function generateTaoDanSlots(targetDate?: string): CourtSlot[] {
+  const courts = INITIAL_COURTS.filter(c => c.venueId === 'venue_01');
+  const slots: CourtSlot[] = [];
+  const today = targetDate || getTodayDateString(0);
+
+  courts.forEach(court => {
+    for (let hour = 6; hour < 22; hour++) {
+      const startHourStr = hour.toString().padStart(2, '0');
+      const endHourStr = (hour + 1).toString().padStart(2, '0');
+      const slotId = `${court.id}_${startHourStr}_00`;
+      const isPeak = hour >= 17 && hour < 21;
+      const price = isPeak ? court.peakPrice : court.regularPrice;
+
+      let status: CourtSlot['status'] = 'available';
+      let ticketId: string | undefined = undefined;
+      let customerName: string | undefined = undefined;
+      let customerPhone: string | undefined = undefined;
+      let note: string | undefined = undefined;
+
+      // Seeded booking: SH-8291
+      if (slotId === 'court_01_09_00') {
+        status = 'bookedApp';
+        ticketId = 'SH-8291';
+        customerName = 'Nguyễn Văn An';
+        customerPhone = '0908 111 222';
+      }
+      // Seeded booking: SH-8292
+      else if (slotId === 'court_02_18_00') {
+        status = 'bookedApp';
+        ticketId = 'SH-8292';
+        customerName = 'Trần Thị Mai';
+        customerPhone = '0918 333 444';
+      }
+      // Seeded booking: SH-7714
+      else if (slotId === 'court_05_19_00') {
+        status = 'bookedApp';
+        ticketId = 'SH-7714';
+        customerName = 'Lê Quốc Bảo';
+        customerPhone = '0938 555 666';
+      }
+      // Manual phone booking
+      else if (slotId === 'court_03_10_00') {
+        status = 'reservedManual';
+        customerName = 'Bùi Đức Thịnh';
+        customerPhone = '0909 999 111';
+        note = 'Khách quen gọi điện giữ chỗ';
+      }
+      // Manual phone booking
+      else if (slotId === 'court_06_16_00') {
+        status = 'reservedManual';
+        customerName = 'Phạm Ngọc Ánh';
+        customerPhone = '0977 888 222';
+        note = 'Nhóm giao lưu Pickleball buổi chiều';
+      }
+      // Maintenance
+      else if (slotId === 'court_04_12_00') {
+        status = 'maintenance';
+        note = 'Thay lưới và căn chỉnh thảm Yonex';
+      }
+      // Maintenance
+      else if (slotId === 'court_07_13_00') {
+        status = 'maintenance';
+        note = 'Bảo trì hệ thống chiếu sáng LED';
+      }
+
+      slots.push({
+        id: slotId,
+        courtId: court.id,
+        courtName: court.name,
+        venueId: court.venueId,
+        date: today,
+        startTime: `${startHourStr}:00`,
+        endTime: `${endHourStr}:00`,
+        price,
+        isPeak,
+        status,
+        ticketId,
+        customerName,
+        customerPhone,
+        note,
+      });
+    }
+  });
+
+  return slots;
+}
+
+export const INITIAL_SLOTS: CourtSlot[] = generateTaoDanSlots();
+
+export const INITIAL_BOOKINGS: BookingTicket[] = [
+  {
+    id: 'SH-8291',
+    slotId: 'court_01_09_00',
+    courtId: 'court_01',
+    courtName: 'Sân Cầu Lông 01',
+    venueId: 'venue_01',
+    venueName: 'CLB Cầu Lông & Pickleball Tao Đàn',
+    sport: 'badminton',
+    date: getTodayDateString(0),
+    timeSlot: '09:00 - 10:00',
+    customerName: 'Nguyễn Văn An',
+    customerPhone: '0908 111 222',
+    price: 120000,
+    paymentStatus: 'paid',
+    paymentMethod: 'momo',
+    checkedIn: false,
+    createdAt: getTodayISOString(0, '07:30:00Z'),
+  },
+  {
+    id: 'SH-8292',
+    slotId: 'court_02_18_00',
+    courtId: 'court_02',
+    courtName: 'Sân Cầu Lông 02',
+    venueId: 'venue_01',
+    venueName: 'CLB Cầu Lông & Pickleball Tao Đàn',
+    sport: 'badminton',
+    date: getTodayDateString(0),
+    timeSlot: '18:00 - 19:00',
+    customerName: 'Trần Thị Mai',
+    customerPhone: '0918 333 444',
+    price: 180000,
+    paymentStatus: 'paid',
+    paymentMethod: 'zalopay',
+    checkedIn: false,
+    createdAt: getTodayISOString(0, '08:15:00Z'),
+  },
+  {
+    id: 'SH-7714',
+    slotId: 'court_05_19_00',
+    courtId: 'court_05',
+    courtName: 'Sân Pickleball 05',
+    venueId: 'venue_01',
+    venueName: 'CLB Cầu Lông & Pickleball Tao Đàn',
+    sport: 'pickleball',
+    date: getTodayDateString(0),
+    timeSlot: '19:00 - 20:00',
+    customerName: 'Lê Quốc Bảo',
+    customerPhone: '0938 555 666',
+    price: 220000,
+    paymentStatus: 'paid',
+    paymentMethod: 'vnpay',
+    checkedIn: false,
+    createdAt: getTodayISOString(0, '08:00:00Z'),
+  },
+  {
+    id: 'BK-20260906-889',
+    slotId: 'court_01_18_00',
+    courtId: 'court_01',
+    courtName: 'Sân Cầu Lông 01',
+    venueId: 'venue_bt_01',
+    venueName: 'CLB Cầu Lông & Pickleball Bình Thạnh Sport',
+    sport: 'badminton',
+    date: getTodayDateString(-1),
+    timeSlot: '18:00 - 20:00',
+    customerName: 'Hoàng Minh',
+    customerPhone: '0909 889 889',
+    price: 300000,
+    paymentStatus: 'paid',
+    paymentMethod: 'vietqr',
+    checkedIn: false,
+    createdAt: getTodayISOString(-1, '08:00:00Z'),
+  },
+  {
+    id: 'BK-20260907-312',
+    slotId: 'court_02_19_00',
+    courtId: 'court_02',
+    courtName: 'Sân Pickleball 02',
+    venueId: 'venue_td_02',
+    venueName: 'Thảo Điền Pickleball Hub',
+    sport: 'pickleball',
+    date: getTodayDateString(0),
+    timeSlot: '19:00 - 21:00',
+    customerName: 'Lê Minh',
+    customerPhone: '0912 312 312',
+    price: 240000,
+    paymentStatus: 'paid',
+    paymentMethod: 'vietqr',
+    checkedIn: false,
+    createdAt: getTodayISOString(0, '09:00:00Z'),
+  },
+  {
+    id: 'BK-20260907-558',
+    slotId: 'court_05_19_30',
+    courtId: 'court_05',
+    courtName: 'Sân Cỏ Nhân Tạo 5A',
+    venueId: 'venue_q7_03',
+    venueName: 'Sân Bóng Đá Mini Nam Sài Gòn',
+    sport: 'football',
+    date: getTodayDateString(1),
+    timeSlot: '19:30 - 21:00',
+    customerName: 'Võ Quốc',
+    customerPhone: '0988 558 558',
+    price: 450000,
+    paymentStatus: 'paid',
+    paymentMethod: 'vietqr',
+    checkedIn: false,
+    createdAt: getTodayISOString(0, '11:00:00Z'),
+  },
+];
+
+export const INITIAL_ADDON_ITEMS: AddOnItem[] = [
+  {
+    id: 'addon_pocari',
+    name: 'Nước thể thao Pocari Sweat 500ml',
+    category: 'beverage',
+    price: 20000,
+    unit: 'chai',
+  },
+  {
+    id: 'addon_water',
+    name: 'Nước suối tinh khiết Aquafina 500ml',
+    category: 'beverage',
+    price: 10000,
+    unit: 'chai',
+  },
+  {
+    id: 'addon_revive',
+    name: 'Nước bù khoáng Revive chanh muối',
+    category: 'beverage',
+    price: 18000,
+    unit: 'chai',
+  },
+  {
+    id: 'addon_racket',
+    name: 'Thuê vợt thi đấu cao cấp',
+    category: 'rental',
+    price: 50000,
+    unit: 'cây/ca',
+  },
+  {
+    id: 'addon_balls',
+    name: 'Hộp bóng Pickleball Franklin (3 quả)',
+    category: 'equipment',
+    price: 60000,
+    unit: 'hộp',
+  },
+  {
+    id: 'addon_shuttlecock',
+    name: 'Ống cầu lông Thành Công (12 quả)',
+    category: 'equipment',
+    price: 240000,
+    unit: 'ống',
+  },
+];
+
+export const INITIAL_PARTNER_ACCOUNTS: PartnerAccount[] = [
+  {
+    id: 'acc_01',
+    fullName: 'Trần Văn Hùng',
+    email: 'hung.tran@taodanclub.vn',
+    phone: '0903 123 456',
+    venueId: 'venue_01',
+    venueName: 'CLB Cầu Lông Tao Đàn - Quận 1',
+    role: 'partner',
+    isActive: true,
+    createdAt: '2026-01-15T08:00:00Z',
+  },
+  {
+    id: 'acc_02',
+    fullName: 'Võ Quốc Anh',
+    email: 'quoc.vo@namsaigonfootball.vn',
+    phone: '0918 333 777',
+    venueId: 'venue_q7_03',
+    venueName: 'Sân Bóng Đá Mini Nam Sài Gòn',
+    role: 'partner',
+    isActive: true,
+    createdAt: '2026-02-01T09:30:00Z',
+  },
+  {
+    id: 'acc_03',
+    fullName: 'Lê Minh Quân',
+    email: 'quan.le@thaodienpickleball.vn',
+    phone: '0909 777 888',
+    venueId: 'venue_td_02',
+    venueName: 'Thảo Điền Pickleball Hub',
+    role: 'partner',
+    isActive: true,
+    createdAt: '2026-03-10T10:00:00Z',
+  },
+  {
+    id: 'acc_04',
+    fullName: 'Hoàng Văn Thụ',
+    email: 'thu.hoang@tanbinharena.vn',
+    phone: '0903 888 999',
+    venueId: 'venue_tb_05',
+    venueName: 'Khu Liên Hợp Thể Thao Tân Bình Arena',
+    role: 'partner',
+    isActive: true,
+    createdAt: '2026-04-05T14:20:00Z',
+  },
+  {
+    id: 'acc_05',
+    fullName: 'Phạm Đức Bình',
+    email: 'binh.pham@binhthanhsport.vn',
+    phone: '028 3511 8899',
+    venueId: 'venue_bt_01',
+    venueName: 'CLB Cầu Lông & Pickleball Bình Thạnh Sport',
+    role: 'partner',
+    isActive: true,
+    createdAt: '2026-04-12T10:00:00Z',
+  },
+];
+
+export const INITIAL_TRANSACTIONS: TransactionRecord[] = [
+  {
+    id: 'tx_01',
+    venueId: 'venue_01',
+    type: 'court_booking',
+    description: 'Đặt sân SH-8291 - Sân Cầu Lông 01 (09:00 - 10:00)',
+    amount: 120000,
+    paymentMethod: 'momo',
+    customerName: 'Nguyễn Văn An',
+    createdAt: getTodayISOString(0, '07:30:00Z'),
+    status: 'completed',
+  },
+  {
+    id: 'tx_02',
+    venueId: 'venue_01',
+    type: 'court_booking',
+    description: 'Đặt sân SH-8292 - Sân Cầu Lông 02 (18:00 - 19:00)',
+    amount: 180000,
+    paymentMethod: 'zalopay',
+    customerName: 'Trần Thị Mai',
+    createdAt: getTodayISOString(0, '08:15:00Z'),
+    status: 'completed',
+  },
+  {
+    id: 'tx_03',
+    venueId: 'venue_01',
+    type: 'court_booking',
+    description: 'Đặt sân SH-7714 - Sân Pickleball 05 (19:00 - 20:00)',
+    amount: 220000,
+    paymentMethod: 'vnpay',
+    customerName: 'Lê Quốc Bảo',
+    createdAt: getTodayISOString(0, '08:00:00Z'),
+    status: 'completed',
+  },
+  {
+    id: 'tx_04',
+    venueId: 'venue_01',
+    type: 'pos_service',
+    description: 'Nước Pocari Sweat x2, Băng quấn vợt x1',
+    amount: 70000,
+    paymentMethod: 'cash',
+    customerName: 'Khách vãng lai',
+    createdAt: getTodayISOString(0, '08:20:00Z'),
+    status: 'completed',
+  },
+];
